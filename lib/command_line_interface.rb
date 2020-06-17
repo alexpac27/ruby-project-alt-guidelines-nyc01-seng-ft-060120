@@ -5,7 +5,7 @@ class CommandLineInterface
         customer = nil
         sleep 2
         system "clear"
-        puts "Welcome to the Flatiron food ordering app."
+        puts "Welcome to the Flatiron Food Ordering App."
         puts "1. Register"
         puts "2. Login"
         puts "3. Exit App"
