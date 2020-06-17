@@ -3,14 +3,33 @@ class CommandLineInterface
 
     def greet
         puts "Welcome to the Flatiron food ordering app."
-        puts "Register by providing a username:"
+        puts ""
     end
 
     def register
-        input = gets.strip.capitalize
-        person = Customer.create(username: input)
-        puts "Thank you for registering, #{input}"
+        puts "Register by providing a username:"
+        inputUser = gets.strip.capitalize
+        puts "Please provide a password:"
+        inputPass = gets.strip
+        person = Customer.create(username: inputUser, password: inputPass)
+        puts "Thank you for registering, #{inputUser}"
         return person
+    end
+
+    def login
+        puts "Enter your username:"
+        inputUser = gets.strip.capitalize
+        if !!Customer.find_by(username: inputUser)
+            puts "Enter your password:"
+            inputPass = gets.strip
+            if !!Customer.find_by(username: inputUser, password: inputPass)
+                Customer.find_by(username: inputUser, password: inputPass)
+            end
+        else
+            puts "Can not find a user with that username."
+            self.greet
+        end
+
     end
 
     def restaurant_list
@@ -51,7 +70,7 @@ class CommandLineInterface
         food_selection = food_selection_checker
         customer.place_order(food_selection)
         puts ""
-        puts "You have selected #{food_selection.food_name}, your order has been created!"
+        puts "You have selected #{food_selection.food_name}, your order has been created! Your total is $#{food_selection.price}."
     end
 
     def additional_order(customer)
@@ -70,8 +89,9 @@ class CommandLineInterface
         puts "2. View Last Order"
         puts "3. Update Last Order"
         puts "4. Cancel Last Order"
-        puts "5. Update Username"
-        puts "6. Exit App"
+        puts "5. View Order History"
+        puts "6. Update Username"
+        puts "7. Exit App"
         puts ""
         puts "___________________________"
         puts "Please enter your choice by typing a number below:"
@@ -91,9 +111,12 @@ class CommandLineInterface
         elsif next_step_input == 4
             self.cancel_order(customer)
         elsif next_step_input == 5
-            self.change_username(customer)
+            self.view_order_history(customer)
         elsif next_step_input == 6
+            self.change_username(customer)
+        elsif next_step_input == 7
             self.exit_app
+
         else
             puts "Invalid choice"
             sleep 2
@@ -101,10 +124,20 @@ class CommandLineInterface
         end
     end
 
+    def view_order_history(customer)
+        puts "#{customer.username}'s Order History:"
+        puts ""
+        customer.orders.each {|order| puts "#{order.menu_item.food_name} ---> $#{order.menu_item.price}"}
+        totalspent = customer.orders.map {|order| order.menu_item.price}.sum
+        puts "You've spent a total of $#{totalspent} with us!"
+        sleep 3
+        self.next_choice(customer)
+    end
+
     def update_last_order(customer)
         menu_obj = customer.last_order.menu_item
         puts "You will be updating the following order: "
-        puts "#{menu_obj.food_name} ---> #{menu_obj.price}"
+        puts "#{menu_obj.food_name} ---> $#{menu_obj.price}"
         sleep 3
         self.restaurant_list
         self.read_menu
@@ -118,7 +151,7 @@ class CommandLineInterface
         puts "Your latest order is below"
         puts ""
         menu_obj = customer.last_order.menu_item
-        puts "#{menu_obj.food_name} ---> #{menu_obj.price}"
+        puts "#{menu_obj.food_name} ---> $#{menu_obj.price}"
         sleep 3
         self.next_choice(customer)
     end

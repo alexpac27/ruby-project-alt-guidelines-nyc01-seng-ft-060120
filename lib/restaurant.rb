@@ -8,7 +8,7 @@ class Restaurant < ActiveRecord::Base
     end
 
     def return_menu_string
-        self.menu_items.map{|item_obj| "#{item_obj.food_name} ---> #{item_obj.price}"}
+        self.menu_items.map{|item_obj| "#{item_obj.food_name} ---> $#{item_obj.price}"}
     end
 
     
