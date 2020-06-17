@@ -72,6 +72,7 @@ class CommandLineInterface
     end
 
     def read_menu(restaurant_name)
+        prompt = TTY::Prompt.new
         selected_rest = Restaurant.find_by(name: restaurant_name)
         puts selected_rest.return_menu_string
     end
