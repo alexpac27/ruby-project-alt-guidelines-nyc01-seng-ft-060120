@@ -1,4 +1,5 @@
-Module One Final Project: Flatiron Food Ordering App
+Module One Final Project:
+Flatiron Food Ordering App
 ========================
 By: Shiro Han, Alex Ortiz
 
