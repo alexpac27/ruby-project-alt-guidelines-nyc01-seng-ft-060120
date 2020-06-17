@@ -1,8 +1,3 @@
-shiro = Customer.create(username: "Shiro")
-c1 = Customer.create(username: "Customer1")
-c2 = Customer.create(username: "Customer2")
-c3 = Customer.create(username: Faker::Name.name)
-c4 = Customer.create(username: Faker::Name.name)
 
 thai = Restaurant.create(name: "Thai")
 greek = Restaurant.create(name: "Greek Place")
@@ -50,28 +45,3 @@ def order_creation(customer, meal)
     order.save
 end
 
-
-
-order1 = Order.create
-order1.customer = shiro
-order1.menu_item = bigmac
-order1.save
-
-order2 = Order.create
-order2.customer = c1
-order2.menu_item = padthai
-order2.save
-
-order3 = Order.create
-order3.customer = c2
-order3.menu_item = salad
-order3.save
-
-order4 = Order.create
-order4.customer = c3
-order4.menu_item = mi1
-order4.save
-
-order5 = order_creation(c3, padthai)
-order6 = order_creation(c4, salad)
-order7 = order_creation(shiro, bigmac)
