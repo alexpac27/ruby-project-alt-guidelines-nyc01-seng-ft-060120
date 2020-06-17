@@ -33,7 +33,7 @@ class Customer < ActiveRecord::Base
     end
 
     def change_username(new_un)
-        self.username = new_un
+        self.update(username: new_un)
     end
 
 end

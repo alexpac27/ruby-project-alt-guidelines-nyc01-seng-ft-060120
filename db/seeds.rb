@@ -1,8 +1,8 @@
-shiro = Customer.create(username: "Shiro", password: 123)
-c1 = Customer.create(username: "Customer1", password: 123)
-c2 = Customer.create(username: "Customer2", password: 123)
-c3 = Customer.create(username: Faker::Name.first_name, password: 123)
-c4 = Customer.create(username: Faker::Name.first_name, password: 123)
+shiro = Customer.create(username: "Shiro")
+c1 = Customer.create(username: "Customer1")
+c2 = Customer.create(username: "Customer2")
+c3 = Customer.create(username: Faker::Name.name)
+c4 = Customer.create(username: Faker::Name.name)
 
 thai = Restaurant.create(name: "Thai")
 greek = Restaurant.create(name: "Greek Place")
@@ -14,11 +14,11 @@ padthai = MenuItem.create(food_name: "Pad Thai", price: 13.99)
 padthai.restaurant = thai
 padthai.save
 
-salad = MenuItem.create(food_name: "Greek Salad", price: 10.50)
+salad = MenuItem.create(food_name: "Greek Salad", price: Faker::Number.decimal(l_digits: 2, r_digits: 2))
 salad.restaurant = greek
 salad.save
 
-gyro = MenuItem.create(food_name: "Gyro", price: 9.50)
+gyro = MenuItem.create(food_name: "Gyro", price: Faker::Number.decimal(l_digits: 2, r_digits: 2))
 gyro.restaurant = greek
 gyro.save
 
@@ -30,9 +30,27 @@ mi1 = MenuItem.create(food_name: Faker::Food.dish, price: Faker::Number.decimal(
 mi1.restaurant = r1
 mi1.save
 
-mi2 = MenuItem.create(food_name: Faker::Food.dish, price: Faker::Number.decimal(l_digits: 2, r_digits: 2))
-mi2.restaurant = r2
-mi2.save
+def rest_meals(rest)
+    meal = MenuItem.create(food_name: Faker::Food.dish, price: Faker::Number.decimal(l_digits: 2, r_digits: 2))
+    meal.restaurant = rest
+    meal.save
+end
+
+3.times {rest_meals(thai)}
+3.times {rest_meals(greek)}
+3.times {rest_meals(mcdonalds)}
+3.times {rest_meals(r1)}
+3.times {rest_meals(r2)}
+
+
+def order_creation(customer, meal)
+    order = Order.create
+    order.customer = customer
+    order.menu_item = meal
+    order.save
+end
+
+
 
 order1 = Order.create
 order1.customer = shiro
@@ -54,7 +72,6 @@ order4.customer = c3
 order4.menu_item = mi1
 order4.save
 
-order5 = Order.create
-order5.customer = c4
-order5.menu_item = mi2
-order5.save
+order5 = order_creation(c3, padthai)
+order6 = order_creation(c4, salad)
+order7 = order_creation(shiro, bigmac)
