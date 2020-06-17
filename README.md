@@ -1,8 +1,8 @@
-Module One Final Project:
+Module One Final Project
+By: Shiro Han, Alex Ortiz
 
 Flatiron Food Ordering App
 ========================
-By: Shiro Han, Alex Ortiz
 
 Welcome to the Flatiron Food Order App! This is a food ordering app, similar to Grubhub and Seamless, that will allow you to place food orders from your favorite restaurants. The app allows you to register as a new user or log in to an existing account. Once in your account, you can do any of the following:
 
