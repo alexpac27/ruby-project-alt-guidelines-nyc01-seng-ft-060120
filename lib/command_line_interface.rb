@@ -4,7 +4,7 @@ class CommandLineInterface
     def greet
         prompt = TTY::Prompt.new
         customer = nil
-        sleep 2
+        sleep 1
         system "clear"
         puts "Welcome to the Flatiron Food Ordering App."
         puts ""
@@ -30,7 +30,7 @@ class CommandLineInterface
         puts ""
         puts "Redirecting you to the homepage now..."
         puts ""
-        sleep 5
+        sleep 3
         self.greet
     end
 
@@ -67,62 +67,43 @@ class CommandLineInterface
         puts "Here is a list of all restaurants:"
         puts ""
         allrestaurant = Restaurant.all.map {|rest| rest.name}
-        check = prompt.enum_select("Select restaurant to view menu", allrestaurant, per_page: 10)
-        read_menu(check)
+        check = prompt.enum_select("Select restaurant to view menu:", allrestaurant, per_page: 10)
     end
 
     def read_menu(restaurant_name)
         prompt = TTY::Prompt.new
         selected_rest = Restaurant.find_by(name: restaurant_name)
-        puts selected_rest.return_menu_string
-    end
-
-    def food_selection_checker
-        puts ""
-        puts "___________________________"
-        puts "Please select your item by typing the food name:"
-        puts ""
-        food_input = gets.strip.titleize
-
-        if !!MenuItem.find_by(food_name: food_input)
-            MenuItem.find_by(food_name: food_input)
-        else
-            puts ""
-            puts "*** You seem to have a typo. Please try again. ***"
-            food_selection_checker
-        end
+        promptreturn = prompt.enum_select("Select the item that you'd like to order:", selected_rest.return_menu_string, per_page: 10)
+        item_name = promptreturn.split(" ---> $")[0]
     end
 
     def place_new_order(customer)
-        food_selection = food_selection_checker
+        rest_name = restaurant_list
+        food_input = read_menu(rest_name)
+        food_selection = MenuItem.find_by(food_name: food_input)
         customer.place_order(food_selection)
         puts ""
         puts "You have selected #{food_selection.food_name}."
         puts "Your order has been created!"
         puts "Your total is $#{food_selection.price}."
-    end
-
-    def additional_order(customer)
-        self.restaurant_list
-        self.place_new_order(customer)
         sleep 5
         self.next_choice(customer)
     end
 
     def next_choice(customer)
         prompt = TTY::Prompt.new
-        sleep 2
+        sleep 1
         system "clear"
         puts ""
         prompt.select("Welcome, #{customer.username}. What would you like to do next?", per_page:7) do |menu|
-            menu.choice "Create New Order", -> {self.additional_order(customer)}
+            menu.choice "Create New Order", -> {self.place_new_order(customer)}
             menu.choice "View Last Order", -> {self.view_last_order(customer)}
             menu.choice "Update Last Order", -> {self.update_last_order(customer)}
             menu.choice "Cancel Last Order", -> {self.cancel_order(customer)}
             menu.choice "View Order History", -> {self.view_order_history(customer)}
             menu.choice "Update Username", -> {self.change_username(customer)}
             menu.choice "Exit App", -> {self.exit_app}
-         end
+        end
     end
 
     def view_order_history(customer)
@@ -137,29 +118,42 @@ class CommandLineInterface
     end
 
     def update_last_order(customer)
-        menu_obj = customer.last_order.menu_item
-        puts "You will be updating the following order: "
-        puts ""
-        puts "#{menu_obj.food_name} ---> $#{menu_obj.price}"
-        puts ""
-        sleep 3
-        puts "___________________________"
-        self.restaurant_list
-        food_selection = food_selection_checker
-        customer.update_last_order(food_selection)
-        puts ""
-        puts "Update Succesful!"
-        puts ""
-        self.view_last_order(customer)
+        if customer.last_order == nil
+            puts "You have no previous orders. Please make one to select this option."
+            sleep 1
+            self.next_choice(customer)
+        else
+            menu_obj = customer.last_order.menu_item
+            puts "You will be updating the following order: "
+            puts ""
+            puts "#{menu_obj.food_name} ---> $#{menu_obj.price}"
+            puts ""
+            sleep 3
+            puts "___________________________"
+            rest_name = self.restaurant_list
+            food_input = self.read_menu(rest_name)
+            food_selection = MenuItem.find_by(food_name: food_input)
+            customer.update_last_order(food_selection)
+            puts ""
+            puts "Update Succesful!"
+            puts ""
+            self.view_last_order(customer)
+        end
     end
 
     def view_last_order(customer)
-        puts "Your latest order is below:"
-        puts ""
-        menu_obj = customer.last_order.menu_item
-        puts "#{menu_obj.food_name} ---> $#{menu_obj.price}"
-        sleep 3
-        self.next_choice(customer)
+        if customer.last_order == nil
+            puts "You have no previous orders. Please make one to select this option."
+            sleep 1
+            self.next_choice(customer)
+        else
+            puts "Your latest order is below:"
+            puts ""
+            menu_obj = customer.last_order.menu_item
+            puts "#{menu_obj.food_name} ---> $#{menu_obj.price}"
+            sleep 3
+            self.next_choice(customer)
+        end
     end
 
     def change_username(customer)
@@ -175,11 +169,17 @@ class CommandLineInterface
     end
 
     def cancel_order(customer)
-        customer.cancel_last_order
-        puts ""
-        puts "You successfully cancelled your last order."
-        sleep 3
-        self.next_choice(customer)
+        if customer.last_order == nil
+            puts "You have no previous orders. Please make one to select this option."
+            sleep 1
+            self.next_choice(customer)
+        else
+            customer.cancel_last_order
+            puts ""
+            puts "You successfully cancelled your last order."
+            sleep 3
+            self.next_choice(customer)
+        end
     end
 
     def exit_app
