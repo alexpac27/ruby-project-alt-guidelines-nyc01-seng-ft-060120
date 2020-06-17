@@ -1,8 +1,8 @@
-shiro = Customer.create(username: "Shiro")
-c1 = Customer.create(username: "Customer1")
-c2 = Customer.create(username: "Customer2")
-c3 = Customer.create(username: Faker::Name.name)
-c4 = Customer.create(username: Faker::Name.name)
+shiro = Customer.create(username: "Shiro", password: 123)
+c1 = Customer.create(username: "Customer1", password: 123)
+c2 = Customer.create(username: "Customer2", password: 123)
+c3 = Customer.create(username: Faker::Name.first_name, password: 123)
+c4 = Customer.create(username: Faker::Name.first_name, password: 123)
 
 thai = Restaurant.create(name: "Thai")
 greek = Restaurant.create(name: "Greek Place")
