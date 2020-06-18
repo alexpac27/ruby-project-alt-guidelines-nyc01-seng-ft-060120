@@ -7,6 +7,7 @@ class CommandLineInterface
         customer = nil
         sleep 1
         system "clear"
+        puts ""
         puts "Welcome to the Flatiron Food Ordering App."
         puts ""
         prompt.select("What would you like to do?") do |menu|
@@ -65,6 +66,7 @@ class CommandLineInterface
 
     def restaurant_list
         prompt = TTY::Prompt.new
+        puts ""
         puts "Here is a list of all restaurants:"
         puts ""
         allrestaurant = Restaurant.all.map {|rest| rest.name}
@@ -74,6 +76,7 @@ class CommandLineInterface
     def read_menu(restaurant_name)
         prompt = TTY::Prompt.new
         selected_rest = Restaurant.find_by(name: restaurant_name)
+        puts ""
         promptreturn = prompt.enum_select("Select the item that you'd like to order:", selected_rest.return_menu_string, per_page: 10)
         item_name = promptreturn.split(" ---> $")[0]
     end
@@ -108,23 +111,28 @@ class CommandLineInterface
     end
 
     def view_order_history(customer)
+        puts ""
         puts "#{customer.username}'s Order History:"
+        puts "___________________________"
         puts ""
         customer.orders.each {|order| puts "#{order.menu_item.food_name} ---> $#{order.menu_item.price}"}
         totalspent = customer.orders.map {|order| order.menu_item.price}.sum
         puts ""
         puts "You've spent a total of $#{totalspent} with us!"
-        sleep 3
+        sleep 4
         self.next_choice(customer)
     end
 
     def update_last_order(customer)
         if customer.last_order == nil
-            puts "You have no previous orders. Please make one to select this option."
-            sleep 1
+            puts ""
+            puts "You have no previous orders."
+            puts "Please make one to select this option."
+            sleep 3
             self.next_choice(customer)
         else
             menu_obj = customer.last_order.menu_item
+            puts ""
             puts "You will be updating the following order: "
             puts ""
             puts "#{menu_obj.food_name} ---> $#{menu_obj.price}"
@@ -144,10 +152,13 @@ class CommandLineInterface
 
     def view_last_order(customer)
         if customer.last_order == nil
-            puts "You have no previous orders. Please make one to select this option."
-            sleep 1
+            puts ""
+            puts "You have no previous orders."
+            puts "Please make one to select this option."
+            sleep 3
             self.next_choice(customer)
         else
+            puts ""
             puts "Your latest order is below:"
             puts ""
             menu_obj = customer.last_order.menu_item
@@ -171,8 +182,10 @@ class CommandLineInterface
 
     def cancel_order(customer)
         if customer.last_order == nil
-            puts "You have no previous orders. Please make one to select this option."
-            sleep 1
+            puts ""
+            puts "You have no previous orders."
+            puts "Please make one to select this option."
+            sleep 3
             self.next_choice(customer)
         else
             customer.cancel_last_order
