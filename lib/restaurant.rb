@@ -13,3 +13,5 @@ class Restaurant < ActiveRecord::Base
 
     
 end
+
+# binding.pry
