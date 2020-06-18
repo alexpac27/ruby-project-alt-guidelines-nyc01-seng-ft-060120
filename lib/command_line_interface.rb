@@ -2,6 +2,7 @@ require 'pry'
 class CommandLineInterface
 
     def greet
+        # self.render_ascii_art
         prompt = TTY::Prompt.new
         customer = nil
         sleep 2
@@ -30,7 +31,7 @@ class CommandLineInterface
         puts ""
         puts "Redirecting you to the homepage now..."
         puts ""
-        sleep 5
+        sleep 3
         self.greet
     end
 
@@ -190,4 +191,17 @@ class CommandLineInterface
     def run
         self.greet
     end
+
+    # def self.render_ascii_art
+    #     ascii = "
+    #     _____ _       _   _                   _____               _    ___          _           _                  _                
+    #    |  ___| | __ _| |_(_)_ __ ___  _ __   |  ___|__   ___   __| |  / _ \ _ __ __| | ___ _ __(_)_ __   __ _     / \   _ __  _ __  
+    #    | |_  | |/ _` | __| | '__/ _ \| '_ \  | |_ / _ \ / _ \ / _` | | | | | '__/ _` |/ _ \ '__| | '_ \ / _` |   / _ \ | '_ \| '_ \ 
+    #    |  _| | | (_| | |_| | | | (_) | | | | |  _| (_) | (_) | (_| | | |_| | | | (_| |  __/ |  | | | | | (_| |  / ___ \| |_) | |_) |
+    #    |_|   |_|\__,_|\__|_|_|  \___/|_| |_| |_|  \___/ \___/ \__,_|  \___/|_|  \__,_|\___|_|  |_|_| |_|\__, | /_/   \_\ .__/| .__/ 
+    #                                                                                                     |___/          |_|   |_|    
+    #   "
+    #       print ascii
+    #   end
 end
+
